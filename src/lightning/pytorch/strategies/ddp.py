@@ -33,6 +33,7 @@ from lightning.fabric.utilities.distributed import (
     _distributed_is_initialized,
     _get_default_process_group_backend_for_device,
     _init_dist_connection,
+    _destroy_dist_connection,
     _sync_ddp_if_available,
 )
 from lightning.fabric.utilities.distributed import group as _group
@@ -416,6 +417,7 @@ class DDPStrategy(ParallelStrategy):
             assert self.model is not None
             self.model = self._layer_sync.revert(self.model)
 
+        _destroy_dist_connection()
         super().teardown()
 
 

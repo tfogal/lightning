@@ -64,6 +64,7 @@ from lightning.fabric.utilities.distributed import (
     _distributed_is_initialized,
     _get_default_process_group_backend_for_device,
     _init_dist_connection,
+    _destroy_dist_connection,
     _sync_ddp_if_available,
 )
 from lightning.fabric.utilities.distributed import group as _group
@@ -486,6 +487,7 @@ class FSDPStrategy(ParallelStrategy):
         self.cluster_environment.teardown()
         self.precision_plugin.teardown()
         self.accelerator.teardown()
+        _destroy_dist_connection()
 
     @classmethod
     def get_registered_strategies(cls) -> List[str]:

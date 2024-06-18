@@ -98,7 +98,12 @@ class _PyTorchSpawnRunExecutor(WorkRunExecutor):
         elif world_size > 1:
             raise Exception("Torch distributed should be available.")
 
-        return work_run(world_size, node_rank, global_rank, local_rank)
+        try:
+            rv = work_run(world_size, node_rank, global_rank, local_rank)
+            return rv
+        finally:
+            if torch.distributed.is_available():
+                torch.distributed.destroy_proces_group()
 
 
 class PyTorchSpawnMultiNode(MultiNode):
